@@ -1,0 +1,39 @@
+requirements
+flask
+flask-sqlalchemy
+flask-cors
+flask-migrate
+ipdb
+sqlalchemy-serializer
+flask-restful
+flask bcrypt
+
+#Setting up a virtual environment using pipenv
+# pipenv install
+# pipenv shell
+
+#Install Required Dependencies:(if necessary and if other dependencies are required install them)
+# pip install flask, flask-sqlalchemy, flask-cors, flask-migrate, ipdb, sqlalchemy-serializer flask-restful, flask-bcrypt
+#If in a virtual environment
+#pipenv install flask, flask-sqlalchemy, flask-cors, flask-migrate, ipdb, sqlalchemy-serializer flask-restful, flask-bcrypt
+
+#Run the following commands to initialize the database migrations
+#flask db init(optional if you do not have a migration folder)
+
+# flask db migrate -m "message"
+# flask db upgrade
+
+#To run the flask application
+#Navigate to the server directory
+# cd server
+# export FLASK_APP=app.py
+# export FLASK_RUN_PORT=5555
+#flask run
+
+# or 
+# cd server
+# python app.py
+
+#seed the database(optional) in the server directory
+#python seed.py
+
