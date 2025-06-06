@@ -192,29 +192,18 @@ class InstructorsResource(Resource):
         if not data or not all(k in data for k in ('name', 'email', 'password')):
             return {"error": "Missing required fields"}, 400
 
-
         name = data['name']
         email = data['email']
         password = data['password']
 
-
-        password_hash = generate_password_hash(password)
-
-        # Assign random department id from 1 to 18
-        department_id = random.randint(1, 18)
-
-
         new_instructor = Instructor(
             name=name,
             email=email,
-            password_hash=password_hash,
-            department_id=department_id
+            department_id=random.randint(1, 18)
         )
-
+        new_instructor.set_password(password)
 
         db.session.add(new_instructor)
-
-
         try:
             db.session.commit()
             return new_instructor.to_dict(), 201
@@ -224,7 +213,7 @@ class InstructorsResource(Resource):
         except Exception as e:
             db.session.rollback()
             return {"error": f"An unexpected error occurred: {str(e)}"}, 500
-        
+
     def put(self, instructor_id):
         data = request.get_json()
         instructor = db.session.get(Instructor, instructor_id)
@@ -493,14 +482,11 @@ class EnrolledStudentsResource(Resource):
         enrollments = Enrollment.query.all()
         return [enrollment.to_dict() for enrollment in enrollments], 200
 
-
-
 class LoginResource(Resource):
     def post(self):
         data = request.get_json()
         user_type = data.get('userType')
         email = data.get('email')
-        # name = data.get('name')  # Not used for login now
         password = data.get('password')
 
         if user_type == 'student':
@@ -508,7 +494,7 @@ class LoginResource(Resource):
         else:
             user = Instructor.query.filter_by(email=email).first()
 
-        if user and user.password_hash and check_password_hash(user.password_hash, password):
+        if user and user.password_hash and user.check_password(password):
             return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
         return {"error": "Invalid credentials"}, 401
 
