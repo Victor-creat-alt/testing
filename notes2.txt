@@ -1,0 +1,362 @@
+[
+    {
+        "description": "A beginner-friendly course covering Python basics.",
+        "image_url": "https://www.lammle.com/wp-content/uploads/2022/01/AdobeStock_283882447-768x432.jpeg",
+        "instructor": {
+            "email": "alicesmith@gmail.com",
+            "department_id": 18,
+            "department": {
+                "id": 18,
+                "name": "Advanced C++ Programming",
+                "head": "Prof Turing",
+                "location": "Building R"
+            },
+            "id": 1,
+            "name": "Alice Smith"
+        },
+        "id": 7,
+        "duration": "10 weeks",
+        "instructor_id": 1,
+        "title": "Introduction to Python"
+    },
+    {
+        "description": "Learn HTML, CSS, and JavaScript basics.",
+        "image_url": "https://t3.ftcdn.net/jpg/08/71/60/32/360_F_871603234_fTMmjlUOpt4F9mDudj8wjyzkt0khEtSZ.jpg",
+        "instructor": {
+            "email": "bobjones@gmail.com",
+            "department_id": 3,
+            "department": {
+                "id": 3,
+                "name": "Data Structures and Algorithms",
+                "head": "Prof Harry",
+                "location": "Building C"
+            },
+            "id": 2,
+            "name": "Bob Jones"
+        },
+        "id": 8,
+        "duration": "12 weeks",
+        "instructor_id": 2,
+        "title": "Web Development Fundamentals"
+    },
+    {
+        "description": "Master essential data structures and algorithms.",
+        "image_url": "https://t3.ftcdn.net/jpg/08/32/41/46/240_F_832414669_2NkPw5qEJwUW9F6NFjuYHQNpZ3v4lBu1.jpg",
+        "instructor": {
+            "email": "carolwhite@gmail.com",
+            "department_id": 17,
+            "department": {
+                "id": 17,
+                "name": "Robotics Fundamentals",
+                "head": "Prof Edgar",
+                "location": "Building Q"
+            },
+            "id": 3,
+            "name": "Carol White"
+        },
+        "id": 9,
+        "duration": "15 weeks",
+        "instructor_id": 3,
+        "title": "Data Structures and Algorithms"
+    },
+    {
+        "description": "Learn SQL and database design principles.",
+        "image_url": "https://t4.ftcdn.net/jpg/14/74/91/83/360_F_1474918320_WbnjZTDgWOlC8ZBknDduS3AR6Sql05wu.webp",
+        "instructor": {
+            "email": "davidblack@gmail.com",
+            "department_id": 6,
+            "department": {
+                "id": 6,
+                "name": "Advanced Java Programming",
+                "head": "Prof Atlas",
+                "location": "Building F"
+            },
+            "id": 4,
+            "name": "David Black"
+        },
+        "id": 10,
+        "duration": "10 weeks",
+        "instructor_id": 4,
+        "title": "Data science Essentials"
+    },
+    {
+        "description": "Introduction to machine learning concepts and techniques.",
+        "image_url": "https://t3.ftcdn.net/jpg/02/58/87/10/240_F_258871009_f5net6t178mMF1nekdg2AS2vuOUhpDjL.jpg",
+        "instructor": {
+            "email": "profsmith@gmail.com",
+            "department_id": 17,
+            "department": {
+                "id": 17,
+                "name": "Robotics Fundamentals",
+                "head": "Prof Edgar",
+                "location": "Building Q"
+            },
+            "id": 5,
+            "name": "Prof Smith"
+        },
+        "id": 11,
+        "duration": "14 weeks",
+        "instructor_id": 5,
+        "title": "Machine Learning Basics"
+    },
+    {
+        "description": "In-depth study of advanced Java features.",
+        "image_url": "https://t3.ftcdn.net/jpg/04/51/12/88/240_F_451128839_vmKOyil368UoXcac46W7aaqelTtLuNFk.jpg",
+        "instructor": {
+            "email": "frankbrown@gmail.com",
+            "department_id": 8,
+            "department": {
+                "id": 8,
+                "name": "Cloud Computing",
+                "head": "Prof Arnold",
+                "location": "Building H"
+            },
+            "id": 6,
+            "name": "Frank Brown"
+        },
+        "id": 12,
+        "duration": "12 weeks",
+        "instructor_id": 6,
+        "title": "Advanced Java Programming"
+    },
+    {
+        "description": "Understanding network security protocols and practices.",
+        "image_url": "https://t3.ftcdn.net/jpg/11/29/72/86/240_F_1129728652_CVnP7Ok3YmuXO185dKDLUyxtOxw7s4F8.jpg",
+        "instructor": {
+            "email": "kathywilson@gmail.com",
+            "department_id": 7,
+            "department": {
+                "id": 7,
+                "name": "Network Security",
+                "head": "Prof Brown",
+                "location": "Building G"
+            },
+            "id": 11,
+            "name": "Kathy Wilson"
+        },
+        "id": 13,
+        "duration": "11 weeks",
+        "instructor_id": 11,
+        "title": "Network Security"
+    },
+    {
+        "description": "Introduction to cloud platforms and services.",
+        "image_url": "https://t4.ftcdn.net/jpg/05/07/66/23/240_F_507662376_BTKmPlIGBvKlRHWKRNeFt7bj7H2SynQm.jpg",
+        "instructor": {
+            "email": "frankbrown@gmail.com",
+            "department_id": 8,
+            "department": {
+                "id": 8,
+                "name": "Cloud Computing",
+                "head": "Prof Arnold",
+                "location": "Building H"
+            },
+            "id": 6,
+            "name": "Frank Brown"
+        },
+        "id": 14,
+        "duration": "13 weeks",
+        "instructor_id": 6,
+        "title": "Cloud Computing"
+    },
+    {
+        "description": "Building mobile applications for iOS and Android.",
+        "image_url": "https://t3.ftcdn.net/jpg/08/39/86/00/240_F_839860004_Ui2JDtAqTS8eiknf3pWdvRELIc7kzDt5.jpg",
+        "instructor": {
+            "email": "profbrown@gmail.com",
+            "department_id": 9,
+            "department": {
+                "id": 9,
+                "name": "Mobile App Development",
+                "head": "Prof Brad",
+                "location": "Building I"
+            },
+            "id": 35,
+            "name": "Prof Brown"
+        },
+        "id": 15,
+        "duration": "15 weeks",
+        "instructor_id": 35,
+        "title": "Mobile App Development"
+    },
+    {
+        "description": "Introduction to game development using Unity.",
+        "image_url": "https://t3.ftcdn.net/jpg/12/71/52/14/240_F_1271521454_jNEB5RNnu1hJvKp44hJFf4YJEOSu1iGq.jpg",
+        "instructor": {
+            "email": "ellabrooks@gmail.com",
+            "department_id": 10,
+            "department": {
+                "id": 10,
+                "name": "Game Development",
+                "head": "Prof Anna",
+                "location": "Building J"
+            },
+            "id": 31,
+            "name": "Ella Brooks"
+        },
+        "id": 16,
+        "duration": "14 weeks",
+        "instructor_id": 31,
+        "title": "Game Development"
+    },
+    {
+        "description": "Introduction to IoT concepts and applications.",
+        "image_url": "https://as2.ftcdn.net/v2/jpg/04/06/61/77/1000_F_406617768_nTZAM6Bi3E2Yndoi4OvNji7CCFGMFMht.jpg",
+        "instructor": {
+            "email": "gracelee@gmail.com",
+            "department_id": 11,
+            "department": {
+                "id": 11,
+                "name": "Internet of Things (IoT)",
+                "head": "Prof Jake",
+                "location": "Building K"
+            },
+            "id": 7,
+            "name": "Grace Lee"
+        },
+        "id": 17,
+        "duration": "12 weeks",
+        "instructor_id": 7,
+        "title": "Internet of Things (IoT)"
+    },
+    {
+        "description": "Understanding blockchain principles and development.",
+        "image_url": "https://t3.ftcdn.net/jpg/01/96/96/86/240_F_196968684_zp8obttcJzlY4tWhFHzDGOTbPkdY0Q3p.jpg",
+        "instructor": {
+            "email": "leoharris@gmail.com",
+            "department_id": 12,
+            "department": {
+                "id": 12,
+                "name": "Blockchain Technology",
+                "head": "Prof Einstein",
+                "location": "Building L"
+            },
+            "id": 12,
+            "name": "Leo Harris"
+        },
+        "id": 18,
+        "duration": "13 weeks",
+        "instructor_id": 12,
+        "title": "Blockchain Technology"
+    },
+    {
+        "description": "Introduction to computer graphics and 3D rendering.",
+        "image_url": "https://t3.ftcdn.net/jpg/06/46/63/92/240_F_646639216_PYzI5mVYCc6P1ldzoBeGxkm53NMHedCx.jpg",
+        "instructor": {
+            "email": "nedking@gmail.com",
+            "department_id": 13,
+            "department": {
+                "id": 13,
+                "name": "Computer Graphics Fundamentals",
+                "head": "Prof Goldberg",
+                "location": "Building M"
+            },
+            "id": 14,
+            "name": "Ned King"
+        },
+        "id": 19,
+        "duration": "11 weeks",
+        "instructor_id": 14,
+        "title": "Computer Graphics Fundamentals"
+    },
+    {
+        "description": "Learn the fundamentals of user interface and user experience design.",
+        "image_url": "https://t3.ftcdn.net/jpg/08/68/75/38/240_F_868753873_oUbEkxxpGPCwgjMInK5KSwi417WHIGCG.jpg",
+        "instructor": {
+            "email": "ivyadams@gmail.com",
+            "department_id": 14,
+            "department": {
+                "id": 14,
+                "name": "UI/UX Design Principles",
+                "head": "Prof Anderson",
+                "location": "Building N"
+            },
+            "id": 9,
+            "name": "Ivy Adams"
+        },
+        "id": 20,
+        "duration": "10 weeks",
+        "instructor_id": 9,
+        "title": "UI/UX Design Principles"
+    },
+    {
+        "description": "Introduction to DevOps practices and tools.",
+        "image_url": "https://t3.ftcdn.net/jpg/03/76/23/14/240_F_376231431_ETTSp326ne8pURyKLjYOREXVPmyuOYxT.jpg",
+        "instructor": {
+            "email": "gavinray@gmail.com",
+            "department_id": 15,
+            "department": {
+                "id": 15,
+                "name": "DevOps Engineering",
+                "head": "Prof Erick",
+                "location": "Building O"
+            },
+            "id": 59,
+            "name": "Gavin Ray"
+        },
+        "id": 21,
+        "duration": "14 weeks",
+        "instructor_id": 59,
+        "title": "DevOps Engineering"
+    },
+    {
+        "description": "Fundamentals of cybersecurity and threat prevention.",
+        "image_url": "https://t4.ftcdn.net/jpg/02/67/96/91/240_F_267969101_m8O1oM92Wkl6XQrQQ8nQxfy6toVBL6Cy.jpg",
+        "instructor": {
+            "email": "paulturner@gmail.com",
+            "department_id": 16,
+            "department": {
+                "id": 16,
+                "name": "Cybersecurity Basics",
+                "head": "Prof Orange",
+                "location": "Building P"
+            },
+            "id": 16,
+            "name": "Paul Turner"
+        },
+        "id": 22,
+        "duration": "11 weeks",
+        "instructor_id": 16,
+        "title": "Cybersecurity Basics"
+    },
+    {
+        "description": "Introduction to robotics concepts, mechanics, and programming.",
+        "image_url": "https://t3.ftcdn.net/jpg/05/71/73/36/240_F_571733660_JBHBlxEUYIeucnJbRFDjNOEgw1rFs7tO.jpg",
+        "instructor": {
+            "email": "carolwhite@gmail.com",
+            "department_id": 17,
+            "department": {
+                "id": 17,
+                "name": "Robotics Fundamentals",
+                "head": "Prof Edgar",
+                "location": "Building Q"
+            },
+            "id": 3,
+            "name": "Carol White"
+        },
+        "id": 23,
+        "duration": "17 weeks",
+        "instructor_id": 3,
+        "title": "Robotics Fundamentals"
+    },
+    {
+        "description": "In-depth exploration of advanced C++ features and techniques.",
+        "image_url": "https://t3.ftcdn.net/jpg/05/29/83/40/240_F_529834005_9qULdAMMxLDrFD13Bxk1C0sjXJqKtubH.jpg",
+        "instructor": {
+            "email": "alicesmith@gmail.com",
+            "department_id": 18,
+            "department": {
+                "id": 18,
+                "name": "Advanced C++ Programming",
+                "head": "Prof Turing",
+                "location": "Building R"
+            },
+            "id": 1,
+            "name": "Alice Smith"
+        },
+        "id": 24,
+        "duration": "14 weeks",
+        "instructor_id": 1,
+        "title": "Advanced C++ Programming"
+    }
+]

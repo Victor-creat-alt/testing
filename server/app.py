@@ -6,7 +6,7 @@ from flask_restful import Api, Resource
 import random
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 api = Api(app)
@@ -496,6 +496,53 @@ class EnrolledStudentsResource(Resource):
         return [enrollment.to_dict() for enrollment in enrollments], 200
 
 
+
+class LoginResource(Resource):
+    def post(self):
+        data = request.get_json()
+        user_type = data.get('userType')
+        email = data.get('email')
+        name = data.get('name')
+        password = data.get('password')
+
+        if user_type == 'student':
+            user = Student.query.filter_by(email=email, name=name).first()
+        else:
+            user = Instructor.query.filter_by(email=email, name=name).first()
+
+        if user and check_password_hash(user.password_hash, password):
+            return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
+        return {"error": "Invalid credentials"}, 401
+
+class SignupResource(Resource):
+    def post(self):
+        data = request.get_json()
+        user_type = data.get('userType')
+        name = data.get('name')
+        email = data.get('email')
+        password = data.get('password')
+
+        if user_type == 'student':
+            if Student.query.filter_by(email=email).first():
+                return {"error": "Email already exists"}, 400
+            new_user = Student(name=name, email=email)
+            new_user.set_password(password)
+        else:
+            if Instructor.query.filter_by(email=email).first():
+                return {"error": "Email already exists"}, 400
+            from random import randint
+            department_id = randint(1, 18)
+            new_user = Instructor(
+                name=name,
+                email=email,
+                password_hash=generate_password_hash(password),
+                department_id=department_id
+            )
+
+        db.session.add(new_user)
+        db.session.commit()
+        return {"id": new_user.id, "email": new_user.email, "name": new_user.name, "userType": user_type}, 201
+    
 # ---------- API Endpoints ----------
 api.add_resource(StudentResource, '/students', '/students/<int:student_id>')
 api.add_resource(CourseResource, '/courses', '/courses/<int:course_id>')
@@ -504,7 +551,8 @@ api.add_resource(DepartmentResource, '/departments', '/departments/<int:departme
 api.add_resource(EnrollmentResource, '/enrollments', '/enrollments/<int:enrollment_id>')
 api.add_resource(StudentEnrollmentCountResource, '/student_enrollment_counts')
 api.add_resource(EnrolledStudentsResource, '/enrolled_students', '/enrolled_students/<int:student_id>')
-
+api.add_resource(LoginResource, '/login')
+api.add_resource(SignupResource, '/signup')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
