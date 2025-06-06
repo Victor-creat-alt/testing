@@ -1,4 +1,3 @@
-# app.py
 from server.config import app, db
 from server.models import Student, Course, Instructor, Department, Enrollment
 from flask import  request
@@ -237,7 +236,8 @@ class InstructorsResource(Resource):
 
         instructor.name = data.get('name', instructor.name)
         instructor.email = data.get('email', instructor.email)
-        instructor.password = data.get('password', instructor.password)
+        if 'password' in data:
+            instructor.set_password(data['password'])
 
 
         try:
@@ -262,7 +262,7 @@ class InstructorsResource(Resource):
         if 'email' in data:
             instructor.email = data['email']
         if 'password' in data:
-            instructor.password = data['password']
+            instructor.set_password(data['password'])
 
 
         try:
@@ -296,8 +296,6 @@ class DepartmentResource(Resource):
             if department:
                 return department.to_dict(), 200
             return {"error": "Department not found"}, 404
-        departments = [d.to_dict() for d in Department.query.all()]
-        return departments, 200
 
 
     def post(self):
@@ -502,15 +500,15 @@ class LoginResource(Resource):
         data = request.get_json()
         user_type = data.get('userType')
         email = data.get('email')
-        name = data.get('name')
+        # name = data.get('name')  # Not used for login now
         password = data.get('password')
 
         if user_type == 'student':
-            user = Student.query.filter_by(email=email, name=name).first()
+            user = Student.query.filter_by(email=email).first()
         else:
-            user = Instructor.query.filter_by(email=email, name=name).first()
+            user = Instructor.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password_hash, password):
+        if user and user.password_hash and check_password_hash(user.password_hash, password):
             return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
         return {"error": "Invalid credentials"}, 401
 
