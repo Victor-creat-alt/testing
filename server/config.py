@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS  # Add CORS
+from flask_restful import Api
+from server.app import LoginResource, SignupResource
 
 # Load environment variables from .env
 load_dotenv()
@@ -25,3 +27,8 @@ CORS(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
+api = Api(app)
+
+# Register API resources
+api.add_resource(LoginResource, '/login')
+api.add_resource(SignupResource, '/signup')
