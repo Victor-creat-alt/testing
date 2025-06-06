@@ -17,6 +17,9 @@ api = Api(app)
 with app.app_context():
     db.create_all()
 
+# Register login and signup resources
+api.add_resource(LoginResource, '/login')
+api.add_resource(SignupResource, '/signup')
 
 # ---------- Resources ----------
 
