@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS  # Add CORS
 
 # Load environment variables from .env
 load_dotenv()
@@ -16,6 +17,9 @@ if not database_url:
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Enable CORS for all routes (allow frontend to access API)
+CORS(app)
 
 # Initialize extensions
 db = SQLAlchemy(app)
