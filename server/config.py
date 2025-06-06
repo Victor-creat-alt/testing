@@ -8,21 +8,13 @@ from flask_bcrypt import Bcrypt
 # Load environment variables from .env
 load_dotenv()
 
+# Use DATABASE_URL directly from .env (as provided by Render)
 database_url = os.getenv("DATABASE_URL")
-if database_url:
-    db_uri = database_url
-else:
-    user = os.getenv("PG_USERNAME")
-    password = os.getenv("PG_PASSWORD")
-    host = os.getenv("PG_HOST")
-    port = os.getenv("PG_PORT")
-    database = os.getenv("PG_DATABASE")
-    if not all([user, password, host, port, database]):
-        raise ValueError("Missing one or more required environment variables. Check your .env file.")
-    db_uri = f"postgresql://{user}:{password}@{host}:{port}/{database}"
+if not database_url:
+    raise ValueError("DATABASE_URL is not set in your .env file. Please check your configuration.")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions
