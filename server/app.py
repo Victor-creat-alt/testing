@@ -1,6 +1,6 @@
 # app.py
 from server.config import app, db
-from models import Student, Course, Instructor, Department, Enrollment
+from server.models import Student, Course, Instructor, Department, Enrollment
 from flask import  request
 from flask_restful import Api, Resource
 import random

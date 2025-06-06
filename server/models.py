@@ -1,5 +1,5 @@
 # Import necessary libraries and modules
-from config import db, bcrypt  # Import database and password hashing tools
+from server.config import db, bcrypt  # Import database and password hashing tools
 from sqlalchemy.orm import validates  # Import validation helper for fields
 from sqlalchemy_serializer import SerializerMixin  # Import serializer for JSON conversion
 from sqlalchemy.ext.associationproxy import association_proxy  # Association Proxy for relationships
