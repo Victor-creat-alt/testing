@@ -9,9 +9,21 @@ logger = logging.getLogger(__name__)
 class LoginResource(Resource):
     def post(self):
         data = request.get_json()
+        if not data:
+            logger.warning("Login failed: No data provided")
+            return {"error": "No data provided"}, 400
+
         user_type = data.get('userType')
         email = data.get('email')
         password = data.get('password')
+
+        if user_type not in ['student', 'instructor']:
+            logger.warning(f"Login failed: Invalid userType {user_type}")
+            return {"error": "Invalid userType"}, 400
+
+        if not email or not password:
+            logger.warning("Login failed: Missing email or password")
+            return {"error": "Missing email or password"}, 400
 
         logger.info(f"Login attempt for userType: {user_type}, email: {email}")
 
