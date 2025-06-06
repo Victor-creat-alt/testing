@@ -8,6 +8,7 @@ from sqlalchemy import func
 from werkzeug.security import generate_password_hash
 from random import randint
 import logging
+from server.auth_resources import LoginResource, SignupResource
 
 logger = logging.getLogger(__name__)
 
@@ -485,66 +486,3 @@ class EnrolledStudentsResource(Resource):
 
         enrollments = Enrollment.query.all()
         return [enrollment.to_dict() for enrollment in enrollments], 200
-
-class LoginResource(Resource):
-    def post(self):
-        data = request.get_json()
-        user_type = data.get('userType')
-        email = data.get('email')
-        password = data.get('password')
-
-        logger.info(f"Login attempt for userType: {user_type}, email: {email}")
-
-        if user_type == 'student':
-            user = Student.query.filter_by(email=email).first()
-        else:
-            user = Instructor.query.filter_by(email=email).first()
-
-        if user and user.password_hash and user.check_password(password):
-            logger.info(f"Login successful for user {email}")
-            return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
-
-        logger.warning(f"Login failed for user {email}")
-        return {"error": "Invalid credentials"}, 401
-
-class SignupResource(Resource):
-    def post(self):
-        data = request.get_json()
-        user_type = data.get('userType')
-        name = data.get('name')
-        email = data.get('email')
-        password = data.get('password')
-
-        logger.info(f"Signup attempt for userType: {user_type}, email: {email}")
-
-        if user_type == 'student':
-            if Student.query.filter_by(email=email).first():
-                logger.warning(f"Signup failed: Email already exists for {email}")
-                return {"error": "Email already exists"}, 400
-            new_user = Student(name=name, email=email)
-            new_user.set_password(password)
-        else:
-            if Instructor.query.filter_by(email=email).first():
-                logger.warning(f"Signup failed: Email already exists for {email}")
-                return {"error": "Email already exists"}, 400
-            new_user = Instructor(name=name, email=email, department_id=randint(1, 18))
-            new_user.set_password(password)
-
-        db.session.add(new_user)
-        db.session.commit()
-        logger.info(f"Signup successful for user {email}")
-        return {"id": new_user.id, "email": new_user.email, "name": new_user.name, "userType": user_type}, 201
-
-# ---------- API Endpoints ----------
-api.add_resource(StudentResource, '/students', '/students/<int:student_id>')
-api.add_resource(CourseResource, '/courses', '/courses/<int:course_id>')
-api.add_resource(InstructorsResource, '/instructors', '/instructors/<int:instructor_id>')
-api.add_resource(DepartmentResource, '/departments', '/departments/<int:department_id>')
-api.add_resource(EnrollmentResource, '/enrollments', '/enrollments/<int:enrollment_id>')
-api.add_resource(StudentEnrollmentCountResource, '/student_enrollment_counts')
-api.add_resource(EnrolledStudentsResource, '/enrolled_students', '/enrolled_students/<int:student_id>')
-api.add_resource(LoginResource, '/login')
-api.add_resource(SignupResource, '/signup')
-
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)

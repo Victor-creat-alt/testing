@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS  # Add CORS
 from flask_restful import Api
-from server.app import LoginResource, SignupResource
+from server.auth_resources import LoginResource, SignupResource
 
 # Load environment variables from .env
 load_dotenv()
