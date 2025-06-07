@@ -1,8 +1,9 @@
 # Import necessary libraries and modules
-from server.config import db, bcrypt  # Import database and password hashing tools
+from server.config import db  # Import database
 from sqlalchemy.orm import validates  # Import validation helper for fields
 from sqlalchemy_serializer import SerializerMixin  # Import serializer for JSON conversion
 from sqlalchemy.ext.associationproxy import association_proxy  # Association Proxy for relationships
+from werkzeug.security import generate_password_hash, check_password_hash  # Import password hashing tools
 
 # Define the Student model
 class Student(db.Model, SerializerMixin):
@@ -19,11 +20,11 @@ class Student(db.Model, SerializerMixin):
 
     # Set hashed password
     def set_password(self, password):
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password_hash = generate_password_hash(password)
 
     # Check if provided password matches the stored hash
     def check_password(self, password):
-        return bcrypt.check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password_hash, password)
 
     # Validate email format during assignment
     @validates('email')
@@ -36,7 +37,7 @@ class Student(db.Model, SerializerMixin):
     def validate_password(self, key, password):
         assert len(password) >= 8, "Password must be at least 8 characters long."
         assert any(char.isdigit() for char in password), "Password must contain at least one number."
-        return bcrypt.generate_password_hash(password).decode('utf-8')
+        return generate_password_hash(password)
 
 # Define the Course model
 class Course(db.Model, SerializerMixin):
@@ -65,10 +66,10 @@ class Instructor(db.Model, SerializerMixin):
 
     # Define methods for password management (same as Student model)
     def set_password(self, password):
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return bcrypt.check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password_hash, password)
 
     @validates('email')
     def validate_email(self, key, email):
@@ -79,7 +80,7 @@ class Instructor(db.Model, SerializerMixin):
     def validate_password(self, key, password):
         assert len(password) >= 8, "Password must be at least 8 characters long."
         assert any(char.isdigit() for char in password), "Password must contain at least one digit."
-        return bcrypt.generate_password_hash(password).decode('utf-8')
+        return generate_password_hash(password)
 
 # Define the Department model
 class Department(db.Model, SerializerMixin):

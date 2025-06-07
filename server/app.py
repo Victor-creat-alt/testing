@@ -5,7 +5,7 @@ from flask_restful import Api, Resource
 import random
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
-from werkzeug.security import generate_password_hash
+# Removed unused import of generate_password_hash from werkzeug.security
 from random import randint
 import logging
 
