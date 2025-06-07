@@ -57,7 +57,11 @@ class StudentResource(Resource):
         if 'email' in data:
             student.email = data['email']
         if 'password' in data:
-            student.set_password(data['password'])
+            try:
+                password = data['password'].strip()
+                student.set_password(password)
+            except AssertionError as e:
+                return {"error": str(e)}, 400
 
 
         db.session.commit()
@@ -508,6 +512,7 @@ class LoginResource(Resource):
             return {"error": "Missing email or password"}, 400
 
         email = email.lower().strip()
+        password = password.strip()
         logger.info(f"Login attempt for userType: {user_type}, email: {email}")
 
         if user_type == 'student':
@@ -547,13 +552,21 @@ class SignupResource(Resource):
                 logger.warning(f"Signup failed: Email already exists for {email}")
                 return {"error": "Email already exists"}, 400
             new_user = Student(name=name, email=email)
-            new_user.set_password(password)
+            try:
+                password = password.strip()
+                new_user.set_password(password)
+            except AssertionError as e:
+                return {"error": str(e)}, 400
         else:
             if Instructor.query.filter_by(email=email).first():
                 logger.warning(f"Signup failed: Email already exists for {email}")
                 return {"error": "Email already exists"}, 400
             new_user = Instructor(name=name, email=email, department_id=randint(1, 18))
-            new_user.set_password(password)
+            try:
+                password = password.strip()
+                new_user.set_password(password)
+            except AssertionError as e:
+                return {"error": str(e)}, 400
 
         from server.config import db
         db.session.add(new_user)
