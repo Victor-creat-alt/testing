@@ -523,12 +523,14 @@ class LoginResource(Resource):
             logger.warning(f"Login failed: No password set for user {email}")
             return {"error": "Invalid credentials"}, 401
 
+        logger.debug(f"Password hash for user {email}: {user.password_hash}")
+
         if user.check_password(password):
             logger.info(f"Login successful for user {email}")
             return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
-
-        logger.warning(f"Login failed: Incorrect password for user {email}")
-        return {"error": "Invalid credentials"}, 401
+        else:
+            logger.warning(f"Login failed: Incorrect password for user {email}")
+            return {"error": "Invalid credentials"}, 401
 
 class SignupResource(Resource):
     def post(self):
