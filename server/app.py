@@ -507,18 +507,27 @@ class LoginResource(Resource):
             logger.warning("Login failed: Missing email or password")
             return {"error": "Missing email or password"}, 400
 
+        email = email.lower().strip()
         logger.info(f"Login attempt for userType: {user_type}, email: {email}")
 
         if user_type == 'student':
-            user = Student.query.filter_by(email=email).first()
+            user = Student.query.filter(func.lower(Student.email) == email).first()
         else:
-            user = Instructor.query.filter_by(email=email).first()
+            user = Instructor.query.filter(func.lower(Instructor.email) == email).first()
 
-        if user and user.password_hash and user.check_password(password):
+        if user is None:
+            logger.warning(f"Login failed: User not found for email {email}")
+            return {"error": "Invalid credentials"}, 401
+
+        if not user.password_hash:
+            logger.warning(f"Login failed: No password set for user {email}")
+            return {"error": "Invalid credentials"}, 401
+
+        if user.check_password(password):
             logger.info(f"Login successful for user {email}")
             return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
 
-        logger.warning(f"Login failed for user {email}")
+        logger.warning(f"Login failed: Incorrect password for user {email}")
         return {"error": "Invalid credentials"}, 401
 
 class SignupResource(Resource):
