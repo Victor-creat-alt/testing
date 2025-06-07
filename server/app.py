@@ -252,6 +252,8 @@ class DepartmentResource(Resource):
             if department:
                 return department.to_dict(), 200
             return {"error": "Department not found"}, 404
+        departments = [d.to_dict() for d in Department.query.all()]
+        return departments, 200
 
     def post(self):
         data = request.get_json()
