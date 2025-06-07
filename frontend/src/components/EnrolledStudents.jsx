@@ -8,7 +8,7 @@ function EnrolledStudents() {
     const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [error, setError] = useState(null);
-    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://course-2tq7.onrender.com';
     const navigate = useNavigate();
 
     const handleBackClick = () => {

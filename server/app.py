@@ -319,7 +319,6 @@ class EnrollmentResource(Resource):
                 return enrollment.to_dict(), 200
             return {"error": "Enrollment not found"}, 404
 
-        # Support filtering by studentId and courseId query parameters
         student_id = request.args.get('studentId', type=int)
         course_id = request.args.get('courseId', type=int)
 
@@ -334,12 +333,16 @@ class EnrollmentResource(Resource):
 
     def post(self):
         data = request.get_json()
-        # Accept camelCase keys from frontend
         if not data or not all(k in data for k in ('studentId', 'courseId')):
             return {"error": "Missing required fields."}, 400
 
         student_id = data['studentId']
         course_id = data['courseId']
+
+        # Check if student exists
+        student = db.session.get(Student, student_id)
+        if not student:
+            return {"error": "Student not found. Enrollment denied."}, 404
 
         new_enrollment = Enrollment(
             student_id=student_id,
@@ -390,6 +393,12 @@ class EnrollmentResource(Resource):
             return {"error": "Enrollment not found"}, 404
 
         student_id = enrollment.student_id
+
+        # Check if student exists before de-enrolling
+        student = db.session.get(Student, student_id)
+        if not student:
+            return {"error": "Student not found. De-enrollment denied."}, 404
+
         db.session.delete(enrollment)
         db.session.commit()
         self.update_student_grade(student_id)
@@ -407,7 +416,7 @@ class EnrollmentResource(Resource):
         for enrollment in enrollments:
             enrollment.grade = grade
         db.session.commit()
-
+        
 class StudentEnrollmentCountResource(Resource):
     def get(self):
         enrollment_counts = db.session.query(

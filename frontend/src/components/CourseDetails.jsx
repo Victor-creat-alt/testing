@@ -187,13 +187,8 @@ const CourseDetails = () => {
           const enrolledCourseIds = response.data.map(
             (enrollment) => enrollment.courseId
           );
-          // Merge with local enrollments if any
-          const localEnrollments = JSON.parse(localStorage.getItem('localEnrollments')) || [];
-          const mergedEnrollments = Array.from(new Set([...enrolledCourseIds, ...localEnrollments]));
-          setEnrolledCourses(mergedEnrollments);
+          setEnrolledCourses(enrolledCourseIds);
           setError(null);
-          // Clear local enrollments after merging
-          localStorage.removeItem('localEnrollments');
         } catch (err) {
           console.error('Error fetching enrolled courses:', err);
           setError('Failed to fetch enrolled courses.');
@@ -204,25 +199,11 @@ const CourseDetails = () => {
   }, [userId]);
 
   const handleToggleEnrollment = async (courseId) => {
+    if (!userId) {
+      alert('Please log in to enroll in courses.');
+      return;
+    }
     try {
-      if (!userId) {
-        // For non-logged-in users, save enrollment intent in localStorage
-        let localEnrollments = JSON.parse(localStorage.getItem('localEnrollments')) || [];
-        if (localEnrollments.includes(courseId)) {
-          // Remove enrollment
-          localEnrollments = localEnrollments.filter(id => id !== courseId);
-          alert('You have been de-enrolled from the course (local).');
-        } else {
-          // Add enrollment
-          localEnrollments.push(courseId);
-          alert('Enrolled successfully (local).');
-        }
-        localStorage.setItem('localEnrollments', JSON.stringify(localEnrollments));
-        setEnrolledCourses(localEnrollments);
-        setError(null);
-        return;
-      }
-
       if (enrolledCourses.includes(courseId)) {
         // Find the enrollment id to delete
         const response = await axios.get(
