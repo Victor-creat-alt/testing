@@ -8,8 +8,11 @@ from sqlalchemy import func
 from random import randint
 from server.config import app, db
 from server.models import Student, Course, Instructor, Department, Enrollment
+from flask_cors import CORS
 
 logger = logging.getLogger(__name__)
+
+CORS(app, origins=["https://course-three-snowy.vercel.app", "http://localhost:3000"])
 
 api = Api(app)
 with app.app_context():
