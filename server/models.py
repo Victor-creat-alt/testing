@@ -36,11 +36,10 @@ class Student(db.Model, SerializerMixin):
         return email
 
     # Validate and hash password during assignment
-    @validates('password_hash')
-    def validate_password(self, key, password):
+    def set_password(self, password):
         assert len(password) >= 8, "Password must be at least 8 characters long."
         assert any(char.isdigit() for char in password), "Password must contain at least one number."
-        return generate_password_hash(password)
+        self.password_hash = generate_password_hash(password)
 
 # Define the Course model
 class Course(db.Model, SerializerMixin):
@@ -82,11 +81,10 @@ class Instructor(db.Model, SerializerMixin):
         assert '@' in email, "Invalid email format"
         return email
 
-    @validates('password_hash')
-    def validate_password(self, key, password):
+    def set_password(self, password):
         assert len(password) >= 8, "Password must be at least 8 characters long."
         assert any(char.isdigit() for char in password), "Password must contain at least one digit."
-        return generate_password_hash(password)
+        self.password_hash = generate_password_hash(password)
 
 # Define the Department model
 class Department(db.Model, SerializerMixin):
