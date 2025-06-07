@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS  # Add CORS
 
-
 # Load environment variables from .env
 load_dotenv()
 
@@ -26,6 +25,3 @@ CORS(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
-
-
-

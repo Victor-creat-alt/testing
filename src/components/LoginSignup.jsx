@@ -63,31 +63,39 @@ const LoginSignup = () => {
     }
 
     try {
-      if (action === 'login') {
-        console.log('Sending login request with data:', data);
-        const response = await axios.post(`${baseUrl}/login`, data);
-        const user = response.data;
-        console.log('Login response:', user);
-        setAuthState({ userId: user.id, userType: user.userType });
-        alert('Successfully logged in.');
-        if (userType === 'student') {
-          navigate('/home');
+        if (action === 'login') {
+          console.log('Sending login request with data:', data);
+          const response = await axios.post(`${baseUrl}/login`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const user = response.data;
+          console.log('Login response:', user);
+          setAuthState({ userId: user.id, userType: user.userType });
+          alert('Successfully logged in.');
+          if (userType === 'student') {
+            navigate('/home');
+          } else {
+            navigate('/dashboard');
+          }
         } else {
-          navigate('/dashboard');
+          console.log('Sending signup request with data:', data);
+          const response = await axios.post(`${baseUrl}/signup`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const user = response.data;
+          console.log('Signup response:', user);
+          setAuthState({ userId: user.id, userType: user.userType });
+          alert('Registration successful.');
+          if (userType === 'student') {
+            navigate('/home');
+          } else {
+            navigate('/dashboard');
+          }
         }
-      } else {
-        console.log('Sending signup request with data:', data);
-        const response = await axios.post(`${baseUrl}/signup`, data);
-        const user = response.data;
-        console.log('Signup response:', user);
-        setAuthState({ userId: user.id, userType: user.userType });
-        alert('Registration successful.');
-        if (userType === 'student') {
-          navigate('/home');
-        } else {
-          navigate('/dashboard');
-        }
-      }
     } catch (error) {
       console.error('Error during authentication:', error);
       if (

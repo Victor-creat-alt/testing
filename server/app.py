@@ -1,22 +1,18 @@
-from server.config import app, db
-from server.models import Student, Course, Instructor, Department, Enrollment
-from flask import  request
-from flask_restful import Api, Resource
 import random
+import logging
+from flask_restful import Api, Resource
+from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
-# Removed unused import of generate_password_hash from werkzeug.security
 from random import randint
-import logging
-
+from server.config import app, db
+from server.models import Student, Course, Instructor, Department, Enrollment
 
 logger = logging.getLogger(__name__)
-
 
 api = Api(app)
 with app.app_context():
     db.create_all()
-
 
 class StudentResource(Resource):
     def get(self, student_id=None):
@@ -27,7 +23,6 @@ class StudentResource(Resource):
             return {"error": "Student not found."}, 404
         students = [s.to_dict() for s in Student.query.all()]
         return students, 200
-    
 
     def post(self):
         data = request.get_json()
@@ -44,12 +39,10 @@ class StudentResource(Resource):
             db.session.rollback()
             return {"error": "Email already exists"}, 400
 
-
     def patch(self, student_id):
         student = db.session.get(Student, student_id)
         if not student:
             return {"error": "Student not found"}, 404
-
 
         data = request.get_json()
         if 'name' in data:
@@ -63,41 +56,33 @@ class StudentResource(Resource):
             except AssertionError as e:
                 return {"error": str(e)}, 400
 
-
         db.session.commit()
         return student.to_dict(), 200
-
 
     def put(self, student_id):
         student = db.session.get(Student, student_id)
         if not student:
             return {"error": "Student not found"}, 404
 
-
         data = request.get_json()
         if not data or not all(k in data for k in ('name', 'email', 'password')):
             return {"error": "Missing required fields"}, 400
-
 
         student.name = data['name']
         student.email = data['email']
         student.set_password(data['password'])
 
-
         db.session.commit()
         return student.to_dict(), 200
-
 
     def delete(self, student_id):
         student = db.session.get(Student, student_id)
         if not student:
             return {"error": "Student not found"}, 404
 
-
         db.session.delete(student)
         db.session.commit()
         return '', 204
-
 
 class CourseResource(Resource):
     def get(self, course_id=None):
@@ -109,12 +94,10 @@ class CourseResource(Resource):
         courses = [c.to_dict() for c in Course.query.all()]
         return courses, 200
 
-
     def post(self):
         data = request.get_json()
         if not data or not all(k in data for k in ('title', 'description', 'duration', 'image_url', 'instructor_id')):
             return {"error": "Missing required fields"}, 400
-
 
         new_course = Course(
             title=data['title'],
@@ -131,33 +114,27 @@ class CourseResource(Resource):
             db.session.rollback()
             return {"error": "Integrity Error, check instructor_id or department_id"}, 400
 
-
     def patch(self, course_id):
         course = db.session.get(Course, course_id)
         if not course:
             return {"error": "Course not found"}, 404
-
 
         data = request.get_json()
         for field in ['title', 'description', 'duration', 'instructor_id', 'image_url', 'department_id']:
             if field in data:
                 setattr(course, field, data[field])
 
-
         db.session.commit()
         return course.to_dict(), 200
-
 
     def put(self, course_id):
         course = db.session.get(Course, course_id)
         if not course:
             return {"error": "Course not found"}, 404
 
-
         data = request.get_json()
         if not data or not all(k in data for k in ('title', 'description', 'duration', 'image_url', 'instructor_id')):
             return {"error": "Missing required fields"}, 400
-
 
         course.title = data['title']
         course.description = data['description']
@@ -165,23 +142,17 @@ class CourseResource(Resource):
         course.instructor_id = data['instructor_id']
         course.image_url = data['image_url']
 
-
         db.session.commit()
         return course.to_dict(), 200
-
 
     def delete(self, course_id):
         course = db.session.get(Course, course_id)
         if not course:
             return {"error": "Course not found"}, 404
 
-
         db.session.delete(course)
         db.session.commit()
         return '', 204
-
-
-
 
 class InstructorsResource(Resource):
     def get(self, instructor_id=None):
@@ -192,7 +163,7 @@ class InstructorsResource(Resource):
             return {"error": "Instructor not found"}, 404
         instructors = [i.to_dict() for i in Instructor.query.all()]
         return instructors, 200
-    
+
     def post(self):
         data = request.get_json()
         if not data or not all(k in data for k in ('name', 'email', 'password')):
@@ -224,16 +195,13 @@ class InstructorsResource(Resource):
         data = request.get_json()
         instructor = db.session.get(Instructor, instructor_id)
 
-
         if not instructor:
             return {"error": "Instructor not found"}, 404
-
 
         instructor.name = data.get('name', instructor.name)
         instructor.email = data.get('email', instructor.email)
         if 'password' in data:
             instructor.set_password(data['password'])
-
 
         try:
             db.session.commit()
@@ -242,15 +210,12 @@ class InstructorsResource(Resource):
             db.session.rollback()
             return {"error": str(e)}, 500
 
-
     def patch(self, instructor_id):
         data = request.get_json()
         instructor = db.session.get(Instructor, instructor_id)
 
-
         if not instructor:
             return {"error": "Instructor not found"}, 404
-
 
         if 'name' in data:
             instructor.name = data['name']
@@ -259,7 +224,6 @@ class InstructorsResource(Resource):
         if 'password' in data:
             instructor.set_password(data['password'])
 
-
         try:
             db.session.commit()
             return instructor.to_dict(), 200
@@ -267,14 +231,11 @@ class InstructorsResource(Resource):
             db.session.rollback()
             return {"error": str(e)}, 500
 
-
     def delete(self, instructor_id):
         instructor = db.session.get(Instructor, instructor_id)
 
-
         if not instructor:
             return {"error": "Instructor not found"}, 404
-
 
         try:
             db.session.delete(instructor)
@@ -283,7 +244,7 @@ class InstructorsResource(Resource):
         except Exception as e:
             db.session.rollback()
             return {"error": str(e)}, 500
-        
+
 class DepartmentResource(Resource):
     def get(self, department_id=None):
         if department_id:
@@ -292,12 +253,10 @@ class DepartmentResource(Resource):
                 return department.to_dict(), 200
             return {"error": "Department not found"}, 404
 
-
     def post(self):
         data = request.get_json()
         if not data or not all(k in data for k in ('name', 'location', 'head')):
             return {"error": "Missing required fields"}, 400
-
 
         new_department = Department(
             name=data['name'],
@@ -308,53 +267,43 @@ class DepartmentResource(Resource):
         db.session.commit()
         return new_department.to_dict(), 201
 
-
     def patch(self, department_id):
         department = db.session.get(Department, department_id)
         if not department:
             return {"error": "Department not found"}, 404
-
 
         data = request.get_json()
         for field in ['name', 'location', 'head']:
             if field in data:
                 setattr(department, field, data[field])
 
-
         db.session.commit()
         return department.to_dict(), 200
-
 
     def put(self, department_id):
         department = db.session.get(Department, department_id)
         if not department:
             return {"error": "Department not found"}, 404
 
-
         data = request.get_json()
         if not data or not all(k in data for k in ('name', 'location', 'head')):
             return {"error": "Missing required fields"}, 400
-
 
         department.name = data['name']
         department.location = data['location']
         department.head = data['head']
 
-
         db.session.commit()
         return department.to_dict(), 200
-
 
     def delete(self, department_id):
         department = db.session.get(Department, department_id)
         if not department:
             return {"error": "Department not found"}, 404
 
-
         db.session.delete(department)
         db.session.commit()
         return '', 204
-
 
 class EnrollmentResource(Resource):
     def get(self, enrollment_id=None):
@@ -376,7 +325,6 @@ class EnrollmentResource(Resource):
 
         enrollments = [e.to_dict() for e in query.all()]
         return enrollments, 200
-
 
     def post(self):
         data = request.get_json()
@@ -400,56 +348,46 @@ class EnrollmentResource(Resource):
             db.session.rollback()
             return {"error": str(e)}, 400
 
-
     def patch(self, enrollment_id):
         enrollment = db.session.get(Enrollment, enrollment_id)
         if not enrollment:
             return {'error': "Enrollment not found"}, 404
-
 
         data = request.get_json()
         for field in ['student_id', 'course_id']:
             if field in data:
                 setattr(enrollment, field, data[field])
 
-
         db.session.commit()
         self.update_student_grade(enrollment.student_id)
         return enrollment.to_dict(), 200
-
 
     def put(self, enrollment_id):
         enrollment = db.session.get(Enrollment, enrollment_id)
         if not enrollment:
             return {'error': "Enrollment not found"}, 404
 
-
         data = request.get_json()
         if not data or not all(k in data for k in ('student_id', 'course_id')):
             return {"error": "Missing required fields."}, 400
 
-
         enrollment.student_id = data['student_id']
         enrollment.course_id = data['course_id']
-
 
         db.session.commit()
         self.update_student_grade(enrollment.student_id)
         return enrollment.to_dict(), 200
-
 
     def delete(self, enrollment_id):
         enrollment = db.session.get(Enrollment, enrollment_id)
         if not enrollment:
             return {"error": "Enrollment not found"}, 404
 
-
         student_id = enrollment.student_id
         db.session.delete(enrollment)
         db.session.commit()
         self.update_student_grade(student_id)
         return '', 204
-
 
     def update_student_grade(self, student_id):
         enrollment_count = Enrollment.query.filter_by(student_id=student_id).count()
@@ -459,12 +397,10 @@ class EnrollmentResource(Resource):
         if enrollment_count >= 5:
             grade = 'Excellent'
 
-
         enrollments = Enrollment.query.filter_by(student_id=student_id).all()
         for enrollment in enrollments:
             enrollment.grade = grade
         db.session.commit()
-
 
 class StudentEnrollmentCountResource(Resource):
     def get(self):
@@ -473,7 +409,6 @@ class StudentEnrollmentCountResource(Resource):
             func.count(Enrollment.id).label('enrollment_count')
         ).join(Enrollment).group_by(Student.id).all()
         return [{'name': name, 'enrollmentCount': count} for name, count in enrollment_counts], 200
-
 
 class EnrolledStudentsResource(Resource):
     def get(self, student_id=None):
@@ -484,13 +419,8 @@ class EnrolledStudentsResource(Resource):
             result = [enrollment.to_dict() for enrollment in enrollments]
             return result, 200
 
-
         enrollments = Enrollment.query.all()
         return [enrollment.to_dict() for enrollment in enrollments], 200
-    
-    
-# Register login and signup resources
-# Removed duplicate registration to avoid endpoint overwrite error
 
 class LoginResource(Resource):
     def post(self):
@@ -582,10 +512,7 @@ class SignupResource(Resource):
         logger.info(f"Signup successful for user {email}")
         return {"id": new_user.id, "email": new_user.email, "name": new_user.name, "userType": user_type}, 201
 
-
-# ---------- Resources ----------
-
-# Register other API resources
+# Register API resources
 api.add_resource(LoginResource, '/login')
 api.add_resource(SignupResource, '/signup')
 api.add_resource(StudentResource, '/students', '/students/<int:student_id>')
@@ -595,9 +522,6 @@ api.add_resource(DepartmentResource, '/departments', '/departments/<int:departme
 api.add_resource(EnrollmentResource, '/enrollments', '/enrollments/<int:enrollment_id>')
 api.add_resource(StudentEnrollmentCountResource, '/student_enrollment_counts')
 api.add_resource(EnrolledStudentsResource, '/enrolled_students', '/enrolled_students/<int:student_id>')
-
-
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

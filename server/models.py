@@ -1,10 +1,9 @@
-# Import necessary libraries and modules
+import logging
 from server.config import db  # Import database
 from sqlalchemy.orm import validates  # Import validation helper for fields
 from sqlalchemy_serializer import SerializerMixin  # Import serializer for JSON conversion
 from sqlalchemy.ext.associationproxy import association_proxy  # Association Proxy for relationships
 from werkzeug.security import generate_password_hash, check_password_hash  # Import password hashing tools
-import logging
 
 logger = logging.getLogger(__name__)
 
