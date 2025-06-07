@@ -176,6 +176,17 @@ const LoginSignup = () => {
             <h1>{userType === 'student' ? 'Student Login' : 'Instructor Login'}</h1>
             <FormInputs />
             <button type="submit">Login</button>
+            <div className="forgot-password-link" style={{ marginTop: '10px' }}>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/reset-password');
+                }}
+              >
+                Forgot Password?
+              </a>
+            </div>
             <div className="register-link">
               <p>
                 Don't have an account?{' '}

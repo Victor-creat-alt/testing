@@ -512,9 +512,40 @@ class SignupResource(Resource):
         logger.info(f"Signup successful for user {email}")
         return {"id": new_user.id, "email": new_user.email, "name": new_user.name, "userType": user_type}, 201
 
+class ResetPasswordResource(Resource):
+    def post(self):
+        data = request.get_json()
+        new_password = data.get('new_password')
+        email = data.get('email')
+
+        if not new_password or not email:
+            return {"error": "Email and new_password are required."}, 400
+
+        # Validate password length and digit presence
+        if len(new_password) < 8:
+            return {"error": "Password must be at least 8 characters long."}, 400
+        if not any(char.isdigit() for char in new_password):
+            return {"error": "Password must contain at least one digit."}, 400
+
+        # Find user by email in Student or Instructor tables
+        user = Student.query.filter(func.lower(Student.email) == email.lower()).first()
+        if not user:
+            user = Instructor.query.filter(func.lower(Instructor.email) == email.lower()).first()
+        if not user:
+            return {"error": "User not found."}, 404
+
+        try:
+            user.set_password(new_password)
+            db.session.commit()
+            return {"message": "Password reset successful."}, 200
+        except Exception as e:
+            return {"error": f"Failed to reset password: {str(e)}"}, 500
+
+
 # Register API resources
 api.add_resource(LoginResource, '/login')
 api.add_resource(SignupResource, '/signup')
+api.add_resource(ResetPasswordResource, '/reset-password')
 api.add_resource(StudentResource, '/students', '/students/<int:student_id>')
 api.add_resource(CourseResource, '/courses', '/courses/<int:course_id>')
 api.add_resource(InstructorsResource, '/instructors', '/instructors/<int:instructor_id>')
