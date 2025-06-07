@@ -17,13 +17,6 @@ api = Api(app)
 with app.app_context():
     db.create_all()
 
-# Register login and signup resources
-# Removed duplicate registration to avoid endpoint overwrite error
-# api.add_resource(LoginResource, '/login')
-# api.add_resource(SignupResource, '/signup')
-
-# ---------- Resources ----------
-
 
 class StudentResource(Resource):
     def get(self, student_id=None):
@@ -490,3 +483,26 @@ class EnrolledStudentsResource(Resource):
 
         enrollments = Enrollment.query.all()
         return [enrollment.to_dict() for enrollment in enrollments], 200
+    
+    
+# Register login and signup resources
+# Removed duplicate registration to avoid endpoint overwrite error
+api.add_resource(LoginResource, '/login')
+api.add_resource(SignupResource, '/signup')
+
+# ---------- Resources ----------
+
+# Register other API resources
+api.add_resource(StudentResource, '/students', '/students/<int:student_id>')
+api.add_resource(CourseResource, '/courses', '/courses/<int:course_id>')
+api.add_resource(InstructorsResource, '/instructors', '/instructors/<int:instructor_id>')
+api.add_resource(DepartmentResource, '/departments', '/departments/<int:department_id>')
+api.add_resource(EnrollmentResource, '/enrollments', '/enrollments/<int:enrollment_id>')
+api.add_resource(StudentEnrollmentCountResource, '/student_enrollment_counts')
+api.add_resource(EnrolledStudentsResource, '/enrolled_students', '/enrolled_students/<int:student_id>')
+
+
+
+
+if __name__ == '__main__':
+    app.run(port=5555, debug=True)
