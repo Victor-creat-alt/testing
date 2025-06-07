@@ -28,13 +28,19 @@ function EnrolledStudents() {
             .then((res) => {
                 if (res.headers['content-type'] && res.headers['content-type'].includes('application/json')) {
                     const enrollments = res.data || [];
-                    const studentCoursePairs = enrollments.map(enrollment => ({
-                        id: enrollment.id, // Include the enrollment ID
-                        studentName: enrollment.student?.name || '',
-                        courseTitle: enrollment.course?.title || '',
-                        courseImage: enrollment.course?.image_url || '',
-                        courseDescription: enrollment.course?.description || '',
-                    }));
+                    const studentCoursePairs = enrollments.map(enrollment => {
+                        let imageUrl = enrollment.course?.image_url || '';
+                        if (imageUrl && !imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                            imageUrl = API_BASE_URL + imageUrl;
+                        }
+                        return {
+                            id: enrollment.id, // Include the enrollment ID
+                            studentName: enrollment.student?.name || '',
+                            courseTitle: enrollment.course?.title || '',
+                            courseImage: imageUrl,
+                            courseDescription: enrollment.course?.description || '',
+                        };
+                    });
                     setEnrolledStudents(studentCoursePairs);
                     setError(null);
                 } else {
@@ -45,7 +51,11 @@ function EnrolledStudents() {
             })
             .catch((error) => {
                 console.error('Error fetching Enrollments:', error);
-                setError('Failed to fetch enrollments. Please try again later.');
+                if (error.response && error.response.status === 404) {
+                    setError('Enrollments endpoint not found (404). Please check the server.');
+                } else {
+                    setError('Failed to fetch enrollments. Please try again later.');
+                }
                 setEnrolledStudents([]);
             });
     };

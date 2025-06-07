@@ -1,6 +1,7 @@
 import random
 import logging
 from flask_restful import Api, Resource
+from flask import redirect
 from flask import request, jsonify
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
@@ -555,6 +556,15 @@ api.add_resource(DepartmentResource, '/departments', '/departments/<int:departme
 api.add_resource(EnrollmentResource, '/enrollments', '/enrollments/<int:enrollment_id>')
 api.add_resource(StudentEnrollmentCountResource, '/student_enrollment_counts')
 api.add_resource(EnrolledStudentsResource, '/enrolled_students', '/enrolled_students/<int:student_id>')
+
+
+
+from flask import redirect, Response
+
+@app.route('/enrolled-students')
+def redirect_enrolled_students():
+    # Use a 302 redirect instead of 301 to avoid caching issues during development
+    return redirect('/enrolled_students', code=302)
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
