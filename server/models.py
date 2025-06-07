@@ -4,6 +4,9 @@ from sqlalchemy.orm import validates  # Import validation helper for fields
 from sqlalchemy_serializer import SerializerMixin  # Import serializer for JSON conversion
 from sqlalchemy.ext.associationproxy import association_proxy  # Association Proxy for relationships
 from werkzeug.security import generate_password_hash, check_password_hash  # Import password hashing tools
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Define the Student model
 class Student(db.Model, SerializerMixin):
@@ -18,15 +21,21 @@ class Student(db.Model, SerializerMixin):
     courses = association_proxy('enrollments', 'course')  # Proxy to access courses via enrollments
     serialize_rules = ('-password_hash', '-enrollments.student')  # Exclude sensitive data from serialization
 
-    # Set hashed password
+    # Set hashed password with validation
     def set_password(self, password):
+        assert len(password) >= 8, "Password must be at least 8 characters long."
+        assert any(char.isdigit() for char in password), "Password must contain at least one number."
         self.password_hash = generate_password_hash(password)
 
-    # Check if provided password matches the stored hash
+    # Check if provided password matches the stored hash with logging
     def check_password(self, password):
         try:
-            return check_password_hash(self.password_hash, password)
+            result = check_password_hash(self.password_hash, password)
+            if not result:
+                logger.debug(f"Password check failed for user {self.email}")
+            return result
         except ValueError:
+            logger.error(f"ValueError during password check for user {self.email}")
             return False
 
     # Validate email format during assignment
@@ -34,12 +43,6 @@ class Student(db.Model, SerializerMixin):
     def validate_email(self, key, email):
         assert '@' in email, "Invalid email format"  # Ensure email contains '@'
         return email
-
-    # Validate and hash password during assignment
-    def set_password(self, password):
-        assert len(password) >= 8, "Password must be at least 8 characters long."
-        assert any(char.isdigit() for char in password), "Password must contain at least one number."
-        self.password_hash = generate_password_hash(password)
 
 # Define the Course model
 class Course(db.Model, SerializerMixin):
@@ -66,25 +69,28 @@ class Instructor(db.Model, SerializerMixin):
     department = db.relationship("Department", back_populates="instructors", lazy=True)  # Relationship with Department model
     serialize_rules = ('-password_hash', '-courses.instructor', '-department.instructors')  # Exclude sensitive data
 
-    # Define methods for password management (same as Student model)
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        try:
-            return check_password_hash(self.password_hash, password)
-        except ValueError:
-            return False
-
-    @validates('email')
-    def validate_email(self, key, email):
-        assert '@' in email, "Invalid email format"
-        return email
-
+    # Set hashed password with validation
     def set_password(self, password):
         assert len(password) >= 8, "Password must be at least 8 characters long."
         assert any(char.isdigit() for char in password), "Password must contain at least one digit."
         self.password_hash = generate_password_hash(password)
+
+    # Check if provided password matches the stored hash with logging
+    def check_password(self, password):
+        try:
+            result = check_password_hash(self.password_hash, password)
+            if not result:
+                logger.debug(f"Password check failed for user {self.email}")
+            return result
+        except ValueError:
+            logger.error(f"ValueError during password check for user {self.email}")
+            return False
+
+    # Validate email format during assignment
+    @validates('email')
+    def validate_email(self, key, email):
+        assert '@' in email, "Invalid email format"
+        return email
 
 # Define the Department model
 class Department(db.Model, SerializerMixin):
