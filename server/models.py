@@ -24,7 +24,10 @@ class Student(db.Model, SerializerMixin):
 
     # Check if provided password matches the stored hash
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        try:
+            return check_password_hash(self.password_hash, password)
+        except ValueError:
+            return False
 
     # Validate email format during assignment
     @validates('email')
@@ -69,7 +72,10 @@ class Instructor(db.Model, SerializerMixin):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        try:
+            return check_password_hash(self.password_hash, password)
+        except ValueError:
+            return False
 
     @validates('email')
     def validate_email(self, key, email):
