@@ -530,7 +530,15 @@ class LoginResource(Resource):
 
         logger.debug(f"Password hash for user {email}: {user.password_hash}")
 
-        if user.check_password(password):
+        # Additional detailed logging for password check
+        try:
+            password_check_result = user.check_password(password)
+            logger.debug(f"Password check result for user {email}: {password_check_result}")
+        except Exception as e:
+            logger.error(f"Exception during password check for user {email}: {str(e)}")
+            return {"error": "Invalid credentials"}, 401
+
+        if password_check_result:
             logger.info(f"Login successful for user {email}")
             return {"id": user.id, "email": user.email, "name": user.name, "userType": user_type}, 200
         else:
